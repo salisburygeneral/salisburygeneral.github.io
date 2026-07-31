@@ -1,0 +1,11 @@
+{
+  "name": "Salisbury General",
+  "short_name": "Salisbury General",
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "theme_color": "#14140f",
+  "background_color": "#faf9f5",
+  "display": "standalone"
+}
