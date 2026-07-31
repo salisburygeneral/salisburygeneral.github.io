@@ -144,6 +144,22 @@
     transition: opacity .2s;
   }
   nav.primary a:hover { opacity: 1; }
+  .nav-toggle {
+    display: none; -webkit-appearance: none; appearance: none; background: none;
+    border: 1px solid var(--line); color: var(--ink); width: 42px; height: 42px;
+    padding: 0; cursor: pointer; align-items: center; justify-content: center;
+  }
+  .nav-toggle .bars { display: block; position: relative; width: 18px; height: 11px; }
+  .nav-toggle .bars i {
+    position: absolute; left: 0; width: 100%; height: 1px; background: var(--ink);
+    transition: transform .25s cubic-bezier(.2,.7,.2,1), opacity .15s;
+  }
+  .nav-toggle .bars i:nth-child(1) { top: 0; }
+  .nav-toggle .bars i:nth-child(2) { top: 5px; }
+  .nav-toggle .bars i:nth-child(3) { top: 10px; }
+  .nav-toggle[aria-expanded="true"] .bars i:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .bars i:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .bars i:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
 
   /* ---------- shared section furniture ---------- */
   section { border-bottom: 1px solid var(--line); }
@@ -172,11 +188,11 @@
   .btn.solid:hover { background: transparent; color: var(--ink); }
 
   /* ---------- hero ---------- */
-  .hero .section-inner { padding-top: clamp(72px, 12vh, 140px); padding-bottom: clamp(56px, 9vh, 104px); }
+  .hero .section-inner { padding-top: clamp(56px, 9vh, 108px); padding-bottom: clamp(44px, 7vh, 80px); }
   h1.hero-mark {
     font-family: 'Roboto Mono', monospace; font-weight: 700;
     font-size: clamp(52px, 11vw, 132px); line-height: 0.98; letter-spacing: -0.02em;
-    margin: 0 0 34px;
+    margin: 0 0 28px;
   }
   h1.hero-mark .line { display: block; }
   h1.hero-mark .line.under {
@@ -184,7 +200,7 @@
   }
   .hero .tagline {
     font-size: clamp(21px, 2.4vw, 27px); font-style: italic; color: var(--muted);
-    max-width: 40ch; margin: 0 0 44px; line-height: 1.4;
+    max-width: 40ch; margin: 0 0 36px; line-height: 1.4;
   }
   .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
 
@@ -266,7 +282,7 @@
   footer.site .legal .ver { white-space: nowrap; }
 
   /* ---------- content reveal ---------- */
-  .rise { opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  .rise { opacity: 0; transform: translateY(12px); transition: opacity .28s cubic-bezier(.2,.8,.2,1), transform .28s cubic-bezier(.2,.8,.2,1); }
   .rise.in { opacity: 1; transform: none; }
 
   @media (max-width: 860px) {
@@ -278,12 +294,21 @@
     .logo-slot:nth-child(1), .logo-slot:nth-child(2) { border-bottom: 1px solid var(--hair); }
   }
   @media (max-width: 560px) {
-    header.site .inner { flex-direction: column; align-items: flex-start; gap: 14px; height: auto; padding: 20px 0; }
-    nav.primary { gap: 22px; }
+    header.site .inner { position: relative; height: 68px; }
+    .nav-toggle { display: inline-flex; }
+    nav.primary {
+      display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+      flex-direction: column; gap: 0; background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+    nav.primary.open { display: flex; }
+    nav.primary a { opacity: 1; padding: 18px 2px; border-bottom: 1px solid var(--hair); }
+    nav.primary a:last-child { border-bottom: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .rise { opacity: 1; transform: none; transition: none; }
+    .nav-toggle .bars i { transition: none; }
   }
 </style>
 </head>
@@ -291,8 +316,11 @@
 
 <header class="site">
   <div class="wrap inner">
-    <a class="wordmark" href="#top">SALISBURY&nbsp;<b>GENERAL</b></a>
-    <nav class="primary">
+    <span class="wordmark">SALISBURY&nbsp;<b>GENERAL</b></span>
+    <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="primary-nav">
+      <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+    <nav class="primary" id="primary-nav">
       <a href="#consulting">Consulting</a>
       <a href="#notes">Notes</a>
       <a href="#products">Products</a>
@@ -310,7 +338,7 @@
       <p class="tagline">(a software engineering consultancy, mostly)</p>
       <div class="hero-ctas">
         <a class="btn solid" href="#consulting">Book a call</a>
-        <a class="btn" href="#notes">Read the notes</a>
+        <a class="btn" href="https://salisburygeneral.substack.com/" target="_blank" rel="noopener">Read on Substack ↗</a>
       </div>
     </div>
   </section>
@@ -390,7 +418,6 @@
       <div class="social">
         <a href="https://www.linkedin.com/in/salisburygeneral/" target="_blank" rel="noopener">LinkedIn ↗</a>
         <a href="https://github.com/salisburygeneral" target="_blank" rel="noopener">GitHub ↗</a>
-        <a href="https://www.instagram.com/saulsbrie" target="_blank" rel="noopener">Instagram ↗</a>
       </div>
     </div>
     <div class="legal">
@@ -402,6 +429,34 @@
 
 <script>
 (function () {
+  var toggle = document.querySelector('.nav-toggle');
+  var nav = document.getElementById('primary-nav');
+  if (!toggle || !nav) { return; }
+
+  function setOpen(open) {
+    nav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  toggle.addEventListener('click', function () {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') { setOpen(false); }
+  });
+  document.addEventListener('click', function (e) {
+    if (!nav.contains(e.target) && !toggle.contains(e.target)) { setOpen(false); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { setOpen(false); }
+  });
+  var wide = window.matchMedia('(min-width: 561px)');
+  if (wide.addEventListener) {
+    wide.addEventListener('change', function (e) { if (e.matches) { setOpen(false); } });
+  }
+})();
+
+(function () {
   var risers = document.querySelectorAll('.rise');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce || !('IntersectionObserver' in window)) {
@@ -412,7 +467,7 @@
     entries.forEach(function (e) {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
-  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
+  }, { rootMargin: '0px', threshold: 0.01 });
   risers.forEach(function (el) { io.observe(el); });
 })();
 </script>
