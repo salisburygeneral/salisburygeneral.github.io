@@ -1,13 +1,13 @@
 # Salisbury General
 
-> A software engineering consultancy run by Joe Salisbury, offering senior engineering help across AI, cloud-native, and Kubernetes — from engineering management to hands-on development.
+> A software engineering consultancy run by Joe Salisbury, offering senior engineering help across AI, cloud-native, and Kubernetes: from engineering management to hands-on development.
 
 Salisbury General is how Joe Salisbury helps teams ship things that matter. Two sides: engineering management (hiring, structuring teams, leading an engineering department) and practical, hands-on development (building with AI, shipping cloud-native infrastructure with Kubernetes, engineering things the right way).
 
 ## Consulting
 
-- [Call](https://salisburygeneral.com/#consulting): One hour on whatever's pressing — a technical question, a personnel decision, or a second opinion before you commit.
-- [Sprint](https://salisburygeneral.com/#consulting): One to three focused days on a specific thing — a prototype, a hiring plan, or a technical problem that needs solving now.
+- [Call](https://salisburygeneral.com/#consulting): One hour on whatever's pressing - a technical question, a personnel decision, or a second opinion before you commit.
+- [Sprint](https://salisburygeneral.com/#consulting): One to three focused days on a specific thing - a prototype, a hiring plan, or a technical problem that needs solving now.
 - [Retainer](https://salisburygeneral.com/#consulting): A standing block of time each week (from 4 hrs/week) for teams that want someone senior in the loop.
 
 ## Notes
