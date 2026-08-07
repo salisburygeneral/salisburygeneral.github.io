@@ -645,11 +645,11 @@
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    // New tab rather than location.href: if the visitor's mailto handler is webmail,
-    // navigating in place would take them off the site entirely.
-    window.open(compose(), '_blank', 'noopener');
-    // Close behind the handoff, so returning to the tab isn't a stale open form.
-    dialog.close();
+    // location.href, not window.open: iOS Safari blocks window.open for non-HTTP
+    // schemes, so the handoff silently did nothing there.
+    // The dialog is left open on purpose - if the handoff fails, the visitor still
+    // has their text and can try again rather than being left with a blank page.
+    window.location.href = compose();
   });
 
   dialog.querySelector('[data-inq-close]').addEventListener('click', function () {
