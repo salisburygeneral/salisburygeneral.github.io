@@ -17,5 +17,6 @@ Salisbury General is how Joe Salisbury helps teams ship things that matter. Two 
 ## Contact
 
 - Email: inquiries@salisburygeneral.com
+- Book a call: https://calendar.app.google/Fz5vx3vtBYiFqSqR7
 - [LinkedIn](https://www.linkedin.com/in/salisburygeneral/)
 - [GitHub](https://github.com/salisburygeneral)
