@@ -643,13 +643,34 @@
     if (first) { first.focus(); }
   });
 
+  // Desktop gets a new tab, so a webmail handler doesn't navigate the site away.
+  // Anything else keeps location.href - the path that actually works on iOS Safari,
+  // where window.open is blocked for non-HTTP schemes. A misdetected device just
+  // gets location.href, which works everywhere; it only loses the new tab.
+  function prefersNewTab() {
+    return !!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    // location.href, not window.open: iOS Safari blocks window.open for non-HTTP
-    // schemes, so the handoff silently did nothing there.
+    var href = compose();
+
     // The dialog is left open on purpose - if the handoff fails, the visitor still
     // has their text and can try again rather than being left with a blank page.
-    window.location.href = compose();
+    if (!prefersNewTab()) {
+      window.location.href = href;
+      return;
+    }
+
+    // A synthetic anchor click rather than window.open: link activation isn't
+    // subject to the popup blocking that stops window.open on a mailto.
+    var link = document.createElement('a');
+    link.href = href;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   });
 
   dialog.querySelector('[data-inq-close]').addEventListener('click', function () {
