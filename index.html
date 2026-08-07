@@ -645,7 +645,9 @@
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    window.location.href = compose();
+    // New tab rather than location.href: if the visitor's mailto handler is webmail,
+    // navigating in place would take them off the site entirely.
+    window.open(compose(), '_blank', 'noopener');
     // Close behind the handoff, so returning to the tab isn't a stale open form.
     dialog.close();
   });
